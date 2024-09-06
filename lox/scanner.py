@@ -1,7 +1,7 @@
-from app.token_type import TokenType
-from app.tokens import Token, KEYWORDS
+from token_type import TokenType
+from tokens import Token, KEYWORDS
 from typing import List, Optional, Any
-from app.lox import Lox
+
 
 
 class Scanner:
@@ -54,6 +54,7 @@ class Scanner:
         return self.source[self.current + 1]
 
     def string(self):
+        from lox import Lox
         # for reading string literals
         # string starts with '"', so now we look for the end of string by finding '"'
         while self.peek() != '"' and not self.is_at_end():
@@ -108,6 +109,7 @@ class Scanner:
         self.add_token(type)
 
     def scan_token(self):
+        from lox import Lox
         char = self.advance()
 
         match char:

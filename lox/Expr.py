@@ -1,5 +1,5 @@
 from typing import List, Any
-from app.tokens import Token
+from tokens import Token
 
 
 class Expr:

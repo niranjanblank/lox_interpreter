@@ -1,4 +1,4 @@
-from app.token_type import TokenType
+from token_type import TokenType
 from typing import Any, Tuple, Dict
 
 _keywords: Tuple[str] = (
