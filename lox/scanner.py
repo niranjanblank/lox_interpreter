@@ -64,7 +64,7 @@ class Scanner:
             self.advance()
         # checking if we are at the end of string before finding the closing string "
         if self.is_at_end():
-            Lox.error(self.line, "Unterminated string.")
+            Lox.scanner_error(self.line, "Unterminated string.")
             return
         # if we arent at the end of string, we found the closing string as we are out of the loop
         self.advance()

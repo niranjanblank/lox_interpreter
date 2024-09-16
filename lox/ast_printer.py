@@ -21,7 +21,7 @@ class AstPrinter(Expr.ExprVisitor):
         return self.parenthesize(expr.operator.lexeme, expr.right)
 
     def parenthesize(self, name, *exprs):
-        string = ''.join(expr.accept(self) for expr in exprs)
+        string = ' '.join(expr.accept(self) for expr in exprs)
 
         return f'({name} {string})'
 

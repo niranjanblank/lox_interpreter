@@ -1,14 +1,23 @@
 import sys
 from sys import argv
 from scanner import Scanner
-
-
+from tokens import  Token
+from token_type import TokenType
+from parser import Parser
+from ast_printer import AstPrinter
 class Lox:
     had_error = False
 
     @staticmethod
-    def error(line: int, message: str):
+    def scanner_error(line: int, message: str):
         Lox.report(line, "", message)
+
+    @staticmethod
+    def error(token: Token, message: str):
+        if token.type == TokenType.EOF:
+            Lox.report(token.line, ' at end', message)
+        else:
+            Lox.report(token.line,f" at '{token.lexeme}'", message)
 
     @staticmethod
     def report(line: int, where: str, message: str) -> None:
@@ -32,22 +41,32 @@ class Lox:
         if source:
             scanner = Scanner(source)
             scanner.scan_tokens()
-            for token in scanner.tokens:
-                print(token)
+            # for token in scanner.tokens:
+            #     print(token)
+            parser = Parser(scanner.tokens)
+            expression = parser.parse()
+
+            # stop if there is syntax error
+            if Lox.had_error: return
+
+            printer = AstPrinter()
+            print(printer.print(expression))
         else:
             print("EOF  null")
 
     @staticmethod
     def run_prompt():
         while True:
-            print('>>> ', end='')
-            expr = input()
-            first = expr.split(' ')[0]
-            if first == 'exit':
-                exit()
-            else:
-                Lox.run(expr)
-                Lox.had_error = False
+            try:
+                print('>>> ', end='')
+                expr = input()
+                if expr.strip() == 'exit':
+                    exit()
+                else:
+                    Lox.run(expr)
+                    Lox.had_error = False
+            except Exception as e:
+                print(f"Error: {e}")
 
     @staticmethod
     def main(args):
