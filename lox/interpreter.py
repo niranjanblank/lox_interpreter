@@ -1,7 +1,7 @@
 import Expr
 from token_type import TokenType
 from runtime_error import LoxRuntimeError
-from lox import Lox
+
 
 
 class Interpreter(Expr.ExprVisitor):
@@ -32,9 +32,10 @@ class Interpreter(Expr.ExprVisitor):
         return str(object)
 
     def check_number_operand(self, operator, operand):
+        from lox import Lox
         # check the type of operand
         if (type(operand) == float): return
-        raise Lox.runtime_error(operator, "Operand must be a number.")
+        raise LoxRuntimeError(operator, "Operand must be a number.")
 
     def check_number_operands(self, operator, left,right):
         if type(left) == float and type(right) == float: return
@@ -100,9 +101,10 @@ class Interpreter(Expr.ExprVisitor):
         return None
 
     def interpret(self, expr):
+        from lox import Lox
         try:
             value = self.evaluate(expr)
-            print(self.stringfy(value))
+            print(self.stringify(value))
         except RuntimeError as error:
-            LoxRuntimeError(error)
+            Lox.runtime_error(error)
 

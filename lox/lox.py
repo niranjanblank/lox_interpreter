@@ -5,9 +5,11 @@ from tokens import  Token
 from token_type import TokenType
 from parser import Parser
 from ast_printer import AstPrinter
+from interpreter import Interpreter
 class Lox:
     had_error = False
     had_runtime_error = False
+    interpreter = Interpreter()
 
     @staticmethod
     def scanner_error(line: int, message: str):
@@ -39,6 +41,8 @@ class Lox:
 
         if Lox.had_error:
             exit(65)
+        elif Lox.had_runtime_error:
+            exit(70)
         else:
             exit(0)
 
@@ -55,6 +59,7 @@ class Lox:
             # stop if there is syntax error
             if Lox.had_error: return
 
+            Lox.interpreter.interpret(expression)
             printer = AstPrinter()
             print(printer.print(expression))
         else:
