@@ -78,6 +78,3 @@ print "Hello, Lox!";
 
 - [Crafting Interpreters](https://craftinginterpreters.com/): The book that this project is based on.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
