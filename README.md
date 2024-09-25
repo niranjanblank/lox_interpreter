@@ -15,8 +15,8 @@ lox_interpreter/
 │   ├── ast_printer.py        # A utility to print the abstract syntax tree (AST)
 │   ├── Expr.py               # Expression classes for the AST
 │   ├── interpreter.py        # The core interpreter for executing Lox code
-│   ├── lox.py                # Main entry point to run the Lox interpreter
-│   ├── main.py               # Additional script for running the interpreter
+│   ├── lox.py                 # Manages the Lox interpreter's core functionality, including running code, error handling, and REPL
+│   ├── main.py               # Main entry point to run the Lox interpreter
 │   ├── parser.py             # Parser to create AST from tokens
 │   ├── scanner.py            # Lexical scanner for tokenizing input
 │   ├── token_type.py         # Definition of token types used by the scanner
