@@ -7,6 +7,7 @@ from parser import Parser
 from ast_printer import AstPrinter
 class Lox:
     had_error = False
+    had_runtime_error = False
 
     @staticmethod
     def scanner_error(line: int, message: str):
@@ -18,6 +19,11 @@ class Lox:
             Lox.report(token.line, ' at end', message)
         else:
             Lox.report(token.line,f" at '{token.lexeme}'", message)
+
+    @staticmethod
+    def runtime_error(error):
+        print(f"{error}\n[line {error.token.line}]")
+        Lox.had_runtime_error = True
 
     @staticmethod
     def report(line: int, where: str, message: str) -> None:
