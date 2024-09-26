@@ -6,6 +6,7 @@ from token_type import TokenType
 from parser import Parser
 from ast_printer import AstPrinter
 from interpreter import Interpreter
+from runtime_error import LoxRuntimeError
 class Lox:
     had_error = False
     had_runtime_error = False
@@ -23,8 +24,8 @@ class Lox:
             Lox.report(token.line,f" at '{token.lexeme}'", message)
 
     @staticmethod
-    def runtime_error(error):
-        print(f"{error}\n[line {error.token.line}]")
+    def runtime_error(error: LoxRuntimeError):
+        print(f"{error}\n[line {error.token.line}]",file=sys.stderr)
         Lox.had_runtime_error = True
 
     @staticmethod

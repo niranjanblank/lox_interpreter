@@ -42,6 +42,7 @@ class Interpreter(Expr.ExprVisitor):
 
         return str(object)
 
+
     def check_number_operand(self, operator, operand):
         from lox import Lox
         # check the type of operand
@@ -90,6 +91,10 @@ class Interpreter(Expr.ExprVisitor):
             case TokenType.PLUS:
                 if type(left) == float and type(right) == float:
                     return float(left) + float(right)
+                # TODO: this needs to be fixed lated on, change "true" "false" to True False, supported by python
+                # currently "true" is considered as true(boolean) instead of string
+                elif left in ["true", "false"] or right in ["true", "false"]:
+                    raise LoxRuntimeError(expr.operator, "Operands must be two numbers or two strings.")
                 elif type(left) == str and type(right) == str:
                     return str(left) + str(right)
                 raise LoxRuntimeError(expr.operator, "Operands must be two numbers or two strings.")
