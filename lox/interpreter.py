@@ -25,6 +25,12 @@ class Interpreter(Expr.ExprVisitor):
         # checks if the pass arguments are equal
         return a == b
 
+    def boolean_string(self, value):
+        # convert boolean to string as required by lox
+        if value == False:
+            return "false"
+        return "true"
+
     def stringify(self, object):
         # converts string to value
         if object is None: return "nil"
@@ -88,21 +94,21 @@ class Interpreter(Expr.ExprVisitor):
                     return str(left) + str(right)
                 raise LoxRuntimeError(expr.operator, "Operands must be two numbers or two strings.")
             case TokenType.GREATER:
-                self.check_number_operands(expr.operator, left,right)
-                return float(left) > float(right)
+                self.check_number_operands(expr.operator, left, right)
+                return self.boolean_string(float(left) > float(right))
             case TokenType.GREATER_EQUAL:
                 self.check_number_operands(expr.operator, left, right)
-                return float(left) >= float(right)
+                return self.boolean_string(float(left) >= float(right))
             case TokenType.LESS:
                 self.check_number_operands(expr.operator, left, right)
-                return float(left) < float(right)
+                return self.boolean_string(float(left) < float(right))
             case TokenType.LESS_EQUAL:
                 self.check_number_operands(expr.operator, left, right)
-                return float(left) <= float(right)
+                return self.boolean_string(float(left) <= float(right))
             case TokenType.BANG_EQUAL:
-                return not self.is_equal(left, right)
+                return self.boolean_string(not self.is_equal(left, right))
             case TokenType.EQUAL_EQUAL:
-                return self.is_equal(left, right)
+                return self.boolean_string(self.is_equal(left, right))
             case _:
                 pass
         return None
