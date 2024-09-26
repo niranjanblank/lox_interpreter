@@ -10,12 +10,17 @@ class Interpreter(Expr.ExprVisitor):
     def evaluate(self, expr: Expr.Expr):
         return expr.accept(self)
 
-    def is_truthy(self, object):
-        # false and null are false, everything else is truth
-        if object is None or bool(object) is False:
-            return False
-        return True
+    def is_truthy(self, value):
+        # Handle string representations of 'true' and 'false'
+        # false and nil are false, other everything is True
+        if isinstance(value, str):
+            if value == "false":
+                return False
+            elif value == "nil":
+                return False
 
+        # Everything else is considered truthy
+        return True
     def is_equal(self, a,b):
         # checks if the pass arguments are equal
         return a == b
@@ -49,13 +54,15 @@ class Interpreter(Expr.ExprVisitor):
 
     def visit_unary_expr(self, expr: 'Expr.Unary'):
         right = self.evaluate(expr.right)
-
         match expr.operator.type:
             case TokenType.MINUS:
                 self.check_number_operand(expr.operator, right)
                 return -float(right)
             case TokenType.BANG:
-                return not self.is_truthy(right)
+                if self.is_truthy(right):
+                    return "false"
+                return "true"
+                # return not self.is_truthy(right)
         # unreachable
         return None
 
