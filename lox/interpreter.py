@@ -1,10 +1,10 @@
 import Expr
+import Stmt
 from token_type import TokenType
 from runtime_error import LoxRuntimeError
 
 
-
-class Interpreter(Expr.ExprVisitor):
+class Interpreter(Expr.ExprVisitor, Stmt.StmtVisitor):
     pass
 
     def evaluate(self, expr: Expr.Expr):
@@ -21,7 +21,8 @@ class Interpreter(Expr.ExprVisitor):
 
         # Everything else is considered truthy
         return True
-    def is_equal(self, a,b):
+
+    def is_equal(self, a, b):
         # checks if the pass arguments are equal
         return a == b
 
@@ -37,11 +38,10 @@ class Interpreter(Expr.ExprVisitor):
         if type(object) == float:
             text = str(object)
             if text.endswith(".0"):
-                text= text[0:len(text)-2]
+                text = text[0:len(text) - 2]
             return text
 
         return str(object)
-
 
     def check_number_operand(self, operator, operand):
         from lox import Lox
@@ -49,10 +49,18 @@ class Interpreter(Expr.ExprVisitor):
         if (type(operand) == float): return
         raise LoxRuntimeError(operator, "Operand must be a number.")
 
-    def check_number_operands(self, operator, left,right):
+    def check_number_operands(self, operator, left, right):
         if type(left) == float and type(right) == float: return
         raise LoxRuntimeError(operator, "Operands must be numbers.")
 
+    def visit_expression_stmt(self, stmt: 'Stmt.Expression'):
+        self.evaluate(stmt.expression)
+        return None
+
+    def visit_print_stmt(self, stmt: 'Stmt.Print'):
+        value = self.evaluate(stmt.expression)
+        print(self.stringify(value))
+        return None
     def visit_literal_expr(self, expr: 'Expr.Literal'):
         return expr.value
 
@@ -80,7 +88,7 @@ class Interpreter(Expr.ExprVisitor):
         match expr.operator.type:
             case TokenType.MINUS:
                 # checking object type
-                self.check_number_operands(expr.operator, left,right)
+                self.check_number_operands(expr.operator, left, right)
                 return float(left) - float(right)
             case TokenType.SLASH:
                 self.check_number_operands(expr.operator, left, right)
@@ -118,11 +126,14 @@ class Interpreter(Expr.ExprVisitor):
                 pass
         return None
 
-    def interpret(self, expr):
+    def execute(self, stmt: Stmt.Stmt):
+        stmt.accept(self)
+
+    def interpret(self, statements):
         from lox import Lox
         try:
-            value = self.evaluate(expr)
-            print(self.stringify(value))
+            # execute the list of statements
+            for statement in statements:
+                self.execute(statement)
         except RuntimeError as error:
             Lox.runtime_error(error)
-

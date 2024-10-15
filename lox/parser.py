@@ -1,6 +1,7 @@
 import Expr
 from tokens import Token
 from token_type import TokenType
+import Stmt
 
 """
 The rules for lox are:
@@ -43,6 +44,7 @@ class Parser:
         Helper function to tell us we've consumed all the characters
         """
         return self.peek().type == TokenType.EOF
+
     def peek(self):
         # peek the current token value without consuming
         return self.tokens[self.current]
@@ -170,9 +172,36 @@ class Parser:
 
         raise self.error(self.peek(), "Expect expression.")
 
+    def print_statement(self):
+        # print statement is already matched and consume so we dont consume it here
+        # parse the subsequent expression
+        value = self.expression()
+        # consume the terminating semicolon
+        self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        # return the syntax tree
+        return Stmt.Print(value)
+
+    def expression_statement(self):
+        # parse the expression
+        expr = self.expression()
+        # consume semicolon
+        self.consume(TokenType.SEMICOLON, "Expect ';' after expression.")
+        # return the expression
+        return Stmt.Expression(expr)
+
+    def statement(self):
+        # if we find the print token, we return the print_statement
+        if self.match(TokenType.PRINT): return self.print_statement()
+        # else we assume it to be expression statement
+        return self.expression_statement()
+
     def parse(self):
         try:
-            return self.expression()
+            statements = []
+            while not self.is_at_end():
+                statements.append(self.statement())
+
+            # the parser now parses a series of statements, until the end of the input
+            return statements
         except ParseError:
             return None
-

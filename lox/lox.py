@@ -55,14 +55,15 @@ class Lox:
             # for token in scanner.tokens:
             #     print(token)
             parser = Parser(scanner.tokens)
-            expression = parser.parse()
+            # parse the tokens and generate list of statements
+            statements = parser.parse()
 
             # stop if there is syntax error
             if Lox.had_error: return
 
-            Lox.interpreter.interpret(expression)
-            printer = AstPrinter()
-            print(printer.print(expression))
+            Lox.interpreter.interpret(statements)
+            # printer = AstPrinter()
+            # print(printer.print(expression))
         else:
             print("EOF  null")
 

@@ -20,6 +20,12 @@ EXPRESSIONS: Dict = {
     "Unary": ("operator: Token", "right: Expr")
 }
 
+# Statements
+STATEMENTS: Dict = {
+    "Expression": ("expression: Expr",),
+    "Print": ("expression: Expr",),
+
+}
 
 def define_ast(output_dir, base_name: str, types: Dict):
     # define the path to the output file
@@ -91,8 +97,10 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     # Call the define_ast function to generate the file
-    define_ast(output_dir, base_name, EXPRESSIONS)
+    # define_ast(output_dir, base_name, EXPRESSIONS)
 
+    # call the define_ast function to generate the Stmt File
+    define_ast(output_dir, "Stmt", STATEMENTS)
 
 if __name__ == '__main__':
     main()
